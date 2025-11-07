@@ -3,6 +3,7 @@ import pandas as pd
 from io import BytesIO
 
 @anvil.server.callable
+
 def ping(): return "pong"
   
 def process_uploaded_csv(file):

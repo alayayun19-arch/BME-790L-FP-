@@ -14,12 +14,12 @@ class Form1(Form1Template):
     """This method is called when a new file is loaded into this FileLoader"""
     lbl = Label(text=f"Uploaded: {file.name}")
     self.linear_panel_1.add_component(lbl)
-
-    # send file to server to process using pandas
-    df_dict = anvil.server.call('process_uploaded_csv', file)
-
-    # open Form2 and pass the processed dataframe (as list of dicts)
-    open_form('Form2', df_data=df_dict)
+    try:
+      df_dict = anvil.server.call('process_uploaded_csv', file)
+      open_form('Form2', df_data=df_dict)
+    except Exception as e:
+      alert(f"Server call failed: {e}")
+      print(e)
     
     pass
 
