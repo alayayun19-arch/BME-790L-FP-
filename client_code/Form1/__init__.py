@@ -1,5 +1,6 @@
 from ._anvil_designer import Form1Template
 from anvil import *
+import anvil.server
 
 
 class Form1(Form1Template):
@@ -8,3 +9,27 @@ class Form1(Form1Template):
     self.init_components(**properties)
 
     # Any code you write here will run before the form opens.
+
+  def file_loader_app1_change(self, file, **event_args):
+    """This method is called when a new file is loaded into this FileLoader"""
+    lbl = Label(text=f"Uploaded: {file.name}")
+    self.linear_panel_1.add_component(lbl)
+
+    
+    # send file to server to process using pandas
+    #df_dict = anvil.server.call('process_uploaded_csv', file)
+
+    # open Form2 and pass the processed dataframe (as list of dicts)
+    #open_form('Form2', df_data=df_dict)
+    
+    pass
+
+  def button_app1_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    open_form('Form2')
+    pass
+
+  def button_1_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    print(anvil.server.call('ping'))
+    pass
