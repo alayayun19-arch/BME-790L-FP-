@@ -4,12 +4,11 @@ from io import BytesIO
 from .Form1 import Form1
 from .Form2 import Form2
 
-import wfdb
+#import wfdb
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 @anvil.server.callable
-  
 def save_uploaded_file(file):
   # Read uploaded CSV into pandas DataFrame
   Raw_data = pd.read_csv(BytesIO(file.get_bytes()),encoding = "ISO-8859-1")
@@ -23,3 +22,13 @@ def save_uploaded_file(file):
   # Convert to list of dicts for display in DataGrid
   df_dict = Cleaned_raw.to_dict(orient='records')
   return df_dict
+  
+@anvil.server.callable
+def store_df_in_session(df_dict):
+  # anvil.server.session is a per-user dict stored on server runtime
+  anvil.server.session['df_data'] = df_dict
+  return True
+
+@anvil.server.callable
+def get_df_from_session():
+  return anvil.server.session.get('df_data')
