@@ -5,10 +5,10 @@ import anvil.server
 class Form2(Form2Template):
   def __init__(self, **properties):
     self.init_components(**properties)
-    
-    # Keep __init__ light; actual population runs on show
-    # (Designer expects a form_show or data_grid_1_show; we'll provide both)
-
+    #self.data_grid_2.columns = [{"title":"A","data_key":"A"},{"title":"B","data_key":"B"}]
+    self.repeating_panel_2.items = [{"A": 1, "B": 2}, {"A": 3, "B": 4}]
+   
+'''
   def form_show(self, **event_args):
     """Called when form is shown."""
     self._load_data()
@@ -19,7 +19,7 @@ class Form2(Form2Template):
     self._load_data()
 
   def _load_data(self):
-    '''# Avoid loading multiple times
+    # Avoid loading multiple times
     if getattr(self, "_loaded", False):
       return
     result = anvil.server.call('get_df_from_session')
@@ -45,7 +45,7 @@ class Form2(Form2Template):
       self.data_grid_1.items = df_rows
 
     print("Loaded rows:", len(df_rows))
-    self._loaded = True'''
+    self._loaded = True
     self.data_grid_1.columns = [{"title":"A","data_key":"A"},{"title":"B","data_key":"B"}]
     self.data_grid_1.items = [{"A": 1, "B": 2}, {"A": 3, "B": 4}]
     print("Sanity test set items -> should show 2 rows")
@@ -53,5 +53,6 @@ class Form2(Form2Template):
   def data_grid_2_show(self, **event_args):
     """This method is called when the data grid is shown on the screen"""
     self.columns = [{"title":"A","data_key":"A"},{"title":"B","data_key":"B"}]
-    self.items = [{"A": 1, "B": 2}, {"A": 3, "B": 4}]
+    self.repeating_panel_2.items = [{"A": 1, "B": 2}, {"A": 3, "B": 4}]
     pass
+'''

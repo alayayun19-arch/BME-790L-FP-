@@ -1,0 +1,9 @@
+components:
+- data_bindings:
+  - {code: 'self.item['''']', property: item, writeback: false}
+  layout_properties: {grid_position: 'YUUOJE,QPBGJQ'}
+  name: data_row_panel_1
+  properties: {}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true

@@ -1,3 +1,17 @@
-components: []
-container: {type: DataRowPanel}
+components:
+- data_bindings:
+  - {code: 'self.item[''age'']', property: text, writeback: false}
+  layout_properties: {column: JKSDUP}
+  name: label_age
+  properties: {}
+  type: Label
+- data_bindings:
+  - {code: 'self.item[''name'']', property: text, writeback: false}
+  layout_properties: {column: VJQQOR}
+  name: label_name
+  properties: {}
+  type: Label
+container:
+  data_bindings: []
+  type: DataRowPanel
 is_package: true
