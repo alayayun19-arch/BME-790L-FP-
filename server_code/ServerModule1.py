@@ -4,6 +4,10 @@ from io import BytesIO
 from .Form1 import Form1
 from .Form2 import Form2
 
+import wfdb
+import numpy as np
+import matplotlib.pyplot as plt
+
 @anvil.server.callable
   
 def save_uploaded_file(file):

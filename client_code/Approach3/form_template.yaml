@@ -56,7 +56,7 @@ components:
   type: FlowPanel
 - layout_properties: {slot: title}
   name: label_1
-  properties: {text: 'Approach 3: ECG Data Analysis'}
+  properties: {role: title, text: 'Approach 3: ECG Data Analysis'}
   type: Label
 container:
   properties: {html: '@theme:standard-page.html'}
