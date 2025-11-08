@@ -11,7 +11,9 @@ components:
   properties: {align: center, role: input-prompt, text: Cleaned Input}
   type: Label
 - components:
-  - name: repeating_panel_1
+  - data_bindings: []
+    layout_properties: {}
+    name: repeating_panel_1
     properties: {item_template: Form2.RowTemplate1}
     type: RepeatingPanel
   event_bindings: {show: data_grid_1_show}

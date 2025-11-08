@@ -15,8 +15,8 @@ class Form1(Form1Template):
     lbl = Label(text=f"Uploaded: {file.name}")
     self.linear_panel_1.add_component(lbl)
     try:
-      df_dict = anvil.server.call('save_uploaded_file', file)
-      anvil.server.call('store_df_in_session', df_dict)
+      result = anvil.server.call('save_uploaded_file', file)
+      anvil.server.call('store_df_in_session', result)
     # do NOT open Form2 here
     except Exception as e:
       alert(f"Server call failed: {e}")
