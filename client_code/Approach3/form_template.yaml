@@ -62,7 +62,13 @@ components:
   name: content_panel
   properties: {}
   type: ColumnPanel
-- layout_properties: {slot: nav-right}
+- components:
+  - event_bindings: {click: outlined_button_1_click}
+    layout_properties: {}
+    name: outlined_button_1
+    properties: {role: outlined-button, text: Home}
+    type: Button
+  layout_properties: {slot: nav-right}
   name: navbar_links
   properties: {}
   type: FlowPanel
