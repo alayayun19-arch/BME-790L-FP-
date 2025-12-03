@@ -41,3 +41,8 @@ class Form1(Form1Template):
     """This method is called when the button is clicked"""
     print(anvil.server.call('ping'))
     pass
+
+  def approach2_part2_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    open_form('Approach22')
+    pass

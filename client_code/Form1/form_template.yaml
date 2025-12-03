@@ -58,7 +58,8 @@ components:
       name: approach2_part1
       properties: {text: 'Part 1: Brain Region Atrophy Analysis'}
       type: Button
-    - layout_properties: {}
+    - event_bindings: {click: approach2_part2_click}
+      layout_properties: {}
       name: approach2_part2
       properties:
         text: |
