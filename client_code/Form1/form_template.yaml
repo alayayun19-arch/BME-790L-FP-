@@ -56,7 +56,7 @@ components:
     - event_bindings: {click: button_app2_click}
       layout_properties: {}
       name: button_app2
-      properties: {text: Jump}
+      properties: {text: ''}
       type: Button
     - components:
       - layout_properties: {}
