@@ -51,12 +51,15 @@ components:
         foreground: theme:Primary
         icon: fa:angle-double-right
         role: [title, headline]
-        text: 'Approach 2:'
+        text: 'Approach 2: MRI Data'
       type: Label
-    - event_bindings: {click: button_app2_click}
+    - event_bindings: {click: approach2_part1_click}
       layout_properties: {}
-      name: button_app2
-      properties: {text: Jump}
+      name: approach2_part1
+      properties: {text: 'Part 1: Brain Region Atrophy Analysis'}
+      type: Button
+    - name: approach2_part2
+      properties: {text: button_1}
       type: Button
     - components:
       - layout_properties: {}

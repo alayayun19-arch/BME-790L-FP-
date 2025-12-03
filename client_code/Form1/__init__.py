@@ -28,7 +28,7 @@ class Form1(Form1Template):
     open_form("Form2")
     pass
     
-  def button_app2_click(self, **event_args):
+  def approach2_part1_click(self, **event_args):
      """This method is called when the button is clicked"""
      open_form('Form3')
      pass
