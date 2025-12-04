@@ -56,14 +56,15 @@ components:
     - event_bindings: {click: approach2_part1_click}
       layout_properties: {}
       name: approach2_part1
-      properties: {text: 'Part 1: Brain Region Atrophy Analysis'}
+      properties: {background: 'theme:Primary Container', text: 'Part 1: Brain Region Atrophy Analysis'}
       type: Button
     - event_bindings: {click: approach2_part2_click}
       layout_properties: {}
       name: approach2_part2
       properties:
+        background: theme:Primary Container
         text: |
-          Part2: Relations between microstructural measures and cognition
+          Part 2: Relations between microstructural measures and cognition
       type: Button
     - components:
       - layout_properties: {}
