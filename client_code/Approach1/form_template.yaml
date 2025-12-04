@@ -6,6 +6,10 @@ components:
     role: [title, headline]
     text: 'Approach 1: Clinical data analysis'
   type: Label
+- layout_properties: {grid_position: 'RJYFNL,DZXKLJ'}
+  name: button_load
+  properties: {text: Show data}
+  type: Button
 - layout_properties: {grid_position: 'ZAMEGJ,GOOSOC'}
   name: label_1
   properties: {align: center, role: input-prompt, text: Cleaned Input}

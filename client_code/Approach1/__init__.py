@@ -12,11 +12,63 @@ import anvil.users
 class Approach1(Approach1Template):
   def __init__(self, **properties):
     self.init_components(**properties)
-   
-
+    self._refresh_uploads_list()
     # Keep __init__ light; actual population runs on show
     # (Designer expects a form_show or data_grid_1_show; we'll provide both)
+  #Edited by Dec 4 Start
+  def _refresh_uploads_list(self):
+    """Call server to get list of uploads and populate the dropdown."""
+    try:
+      uploads = anvil.server.call('list_uploaded_datasets')  # returns list of dicts
+    except Exception as e:
+      anvil.alert("Could not fetch uploads: " + str(e))
+      uploads = []
 
+      # Format items for the dropdown: a list of tuples (display_text, row_id)
+    dd_items = []
+    for u in uploads:
+      name = u.get("name") or "unnamed"
+      nr = u.get("nrows") or 0
+      nc = u.get("ncols") or 0
+      ts = u.get("uploaded_at")
+      display = f"{name} ({nr}×{nc})"
+      dd_items.append({"label": display, "row_id": u.get("row_id")})
+
+      # assign to the DropDown. Make sure DropDown's `items` expects dicts with keys used below
+    self.drop_down_uploads.items = dd_items
+
+    # optionally pre-select first
+    if dd_items:
+      self.drop_down_uploads.selected_value = dd_items[0]["row_id"]
+    else:
+      self.drop_down_uploads.selected_value = None
+
+  def button_load_click(self, **event_args):
+    """Button click — load selected dataset and display in datagrid_1"""
+    selected = self.drop_down_uploads.selected_value
+    if not selected:
+      anvil.alert("Please choose an upload from the dropdown first.")
+      return
+
+    try:
+      res = anvil.server.call('load_dataframe_from_row', selected)
+    except Exception as e:
+      anvil.alert("Server error: " + str(e))
+      return
+
+    if res.get("status") != "ok":
+      anvil.alert("Error loading dataset: " + res.get("message", "Unknown error"))
+      return
+
+    records = res.get("data_records", [])
+    # set datagrid items
+    self.datagrid_1.items = records
+
+    # Optionally: update UI with metadata
+    nrows = res.get("nrows")
+    ncols = res.get("ncols")
+    anvil.alert(f"Loaded {nrows} rows × {ncols} cols")
+  #Finish
   def form_show(self, **event_args):
     """Called when form is shown."""
     self._load_data()
