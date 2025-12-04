@@ -1,10 +1,9 @@
-from ._anvil_designer import Approach22Template
+from ._anvil_designer import RowTemplate6Template
 from anvil import *
-import plotly.graph_objects as go
 import anvil.server
 
 
-class Approach22(Approach22Template):
+class RowTemplate6(RowTemplate6Template):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
