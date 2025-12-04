@@ -1,7 +1,67 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - layout_properties: {grid_position: 'ZQERAY,IQCUZT KWBFQA,VVCKJL'}
+    name: label_1
+    properties:
+      bold: true
+      font_size: 22
+      foreground: theme:Primary
+      role: title
+      text: |-
+        Approach 2
+        Part 2. Relations between microstructural measures and cognition (DM group only)
+    type: Label
+  - layout_properties: {grid_position: 'ZQERAY,IQCUZT NNSORD,PYIURV'}
+    name: label_3
+    properties:
+      bold: true
+      font_size: 19
+      text: |
+        Global DTI metrics vs cognition
+    type: Label
+  - layout_properties: {grid_position: 'ZQERAY,DOFLMC'}
+    name: returnhome
+    properties: {background: 'theme:Primary Container', text: Home}
+    type: Button
+  - layout_properties: {grid_position: 'VMFHGW,ABZWRI'}
+    name: label_2_copy
+    properties: {bold: false, font_size: 17, role: headline, text: Please upload the clinial data}
+    type: Label
+  - layout_properties: {grid_position: 'IAGVQL,AXIMCK'}
+    name: file_loader_1_copy
+    properties: {background: 'theme:Primary Container', text: Upload your data here}
+    type: FileLoader
+  - layout_properties: {grid_position: 'IAGVQL,GZQSLB'}
+    name: button_1
+    properties: {background: 'theme:Primary Container', icon: 'fa:bar-chart', text: Start Analysis}
+    type: Button
+  - layout_properties: {grid_position: 'RRATVN,CEYKBJ'}
+    name: label_2
+    properties: {font_size: 17, text: 'Global DTI metrics and cognitive performance '}
+    type: Label
+  - components:
+    - name: repeating_panel_1
+      properties: {item_template: Approach22.RowTemplate6}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'WVANQK,KTMGEQ'}
+    name: data_grid_1
+    properties:
+      columns:
+      - {data_key: column_1, id: JKSDUP, title: Column 1}
+      - {data_key: column_2, id: VJQQOR, title: Column 2}
+      - {data_key: column_3, id: OJLQEN, title: Column 3}
+    type: DataGrid
+  - layout_properties: {grid_position: 'FRBOSM,FDKMVT'}
+    name: label_3_copy
+    properties:
+      bold: true
+      font_size: 19
+      text: |
+        Regional DTI metrics vs cognition
+    type: Label
+  layout_properties: {slot: default}
   name: content_panel
-  properties: {}
+  properties: {col_widths: '{"IQCUZT":50,"DOFLMC":10}'}
   type: ColumnPanel
 - layout_properties: {slot: nav-right}
   name: navbar_links
