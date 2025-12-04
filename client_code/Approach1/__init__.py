@@ -1,8 +1,8 @@
-from ._anvil_designer import Form2Template
+from ._anvil_designer import Approach1Template
 from anvil import *
 import anvil.server
 
-class Form2(Form2Template):
+class Approach1(Approach1Template):
   def __init__(self, **properties):
     self.init_components(**properties)
     

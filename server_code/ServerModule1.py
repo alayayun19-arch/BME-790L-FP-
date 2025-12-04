@@ -2,7 +2,7 @@ import anvil.server
 import pandas as pd
 from io import BytesIO
 from .Form1 import Form1
-from .Form2 import Form2
+from .Approach1 import Approach1
 
 #import wfdb
 import numpy as np
