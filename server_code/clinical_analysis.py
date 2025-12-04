@@ -6,6 +6,10 @@ import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind
 
+# For plotting
+import matplotlib
+matplotlib.use("Agg")     # Use non-GUI backend
+import matplotlib.pyplot as plt
 
 @anvil.server.callable
 def analyze_dm_vs_non_dm(file_media):
