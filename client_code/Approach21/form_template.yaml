@@ -16,9 +16,13 @@ components:
   type: Button
 - layout_properties: {grid_position: 'VQYUWJ,UMVQXI'}
   name: label_2
-  properties: {text: Please upload the clinial data}
+  properties: {font_size: 18, role: headline, text: Please upload the clinial data}
   type: Label
+- layout_properties: {grid_position: 'ZJICDT,IJNDNW'}
+  name: file_loader_1
+  properties: {}
+  type: FileLoader
 container:
-  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15}'}
+  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60}', visible: false}
   type: ColumnPanel
 is_package: true
