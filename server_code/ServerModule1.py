@@ -105,7 +105,7 @@ def list_uploaded_datasets():
     # If your table is named "uploaded_data" use that. If you really have approach1_data, keep it.
     table = app_tables.approach1_data   # <<<<<< check this name
     for r in table.search():
-      print("Row keys:", list(r))
+      print("Row keys:", list(r)
       rows.append({
         #"row_id": r.get_id(),
         "name":  r.get("name"),
