@@ -17,60 +17,29 @@ class Approach1(Approach1Template):
     # (Designer expects a form_show or data_grid_1_show; we'll provide both)
   #Edited by Dec 4 Start
   def _refresh_uploads_list(self):
-    try:
-      res = anvil.server.call('list_uploaded_datasets')
-    except Exception as e:
-      anvil.alert("RPC failed: " + repr(e))
-      return
-
-    if not res:
-      anvil.alert("No response from server.")
-      return
-
+    res = anvil.server.call('list_uploaded_datasets')
     if res.get("status") != "ok":
-      anvil.alert("Could not fetch uploads: " + res.get("message", "unknown server error"))
+      anvil.alert("Could not fetch uploads: " + res.get("message",""))
       return
-
-    uploads = res.get("uploads", [])
-    dd_items = []
-    for u in uploads:
-      name = u.get("name") or "unnamed"
-      nr = u.get("nrows") or 0
-      nc = u.get("ncols") or 0
-      display = f"{name} ({nr}×{nc})"
-      dd_items.append({"label": display, "row_id": u.get("row_id")})
-
+    dd_items = [{"label": u["label"], "value": u["row_id"]} for u in res["uploads"]]
     self.drop_down_uploads.items = dd_items
     if dd_items:
-      self.drop_down_uploads.selected_value = dd_items[0]["row_id"]
-    else:
-      self.drop_down_uploads.selected_value = None
+      self.drop_down_uploads.selected_value = dd_items[0]["value"]
 
   def button_load_click(self, **event_args):
-    """Button click — load selected dataset and display in datagrid_1"""
-    selected = self.drop_down_uploads.selected_value
-    if not selected:
-      anvil.alert("Please choose an upload from the dropdown first.")
+    row_id = self.drop_down_uploads.selected_value
+    if not row_id:
+      anvil.alert("Select an upload")
       return
-
-    try:
-      res = anvil.server.call('load_dataframe_from_row', selected)
-    except Exception as e:
-      anvil.alert("Server error: " + str(e))
-      return
-
+    res = anvil.server.call('load_upload_records', row_id, 200)  # preview 200 rows
     if res.get("status") != "ok":
-      anvil.alert("Error loading dataset: " + res.get("message", "Unknown error"))
+      anvil.alert("Error: " + res.get("message",""))
       return
-
-    records = res.get("data_records", [])
-    # set datagrid items
-    self.datagrid_1.items = records
-
-    # Optionally: update UI with metadata
-    nrows = res.get("nrows")
-    ncols = res.get("ncols")
-    anvil.alert(f"Loaded {nrows} rows × {ncols} cols")
+    records = res["records"]
+    # save columns on the form so RowTemplate uses consistent order
+    self.current_columns = res.get("columns", [])
+    self.repeating_panel.items = records
+    self.label_cols.text = ", ".join(self.current_columns[:20])
   #Finish
   def form_show(self, **event_args):
     """Called when form is shown."""

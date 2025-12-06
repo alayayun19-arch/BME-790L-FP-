@@ -83,7 +83,7 @@ def load_dataframe_from_row(row_id):
   else:
     return {"status": "error", "msg": "no data found in row"}
 
-def save_uploaded_file(file):
+'''def save_uploaded_file(file):
   # Read uploaded CSV into pandas DataFrame
   Raw_data = pd.read_csv(BytesIO(file.get_bytes()),encoding = "ISO-8859-1")
   #missing_counts = Raw_data.isnull().sum()
@@ -95,31 +95,99 @@ def save_uploaded_file(file):
   # Convert to list of dicts for display in DataGrid
   df_rows = Cleaned_raw.to_dict(orient = 'records')
   df_columns = list(Cleaned_raw.columns)
-  return {"rows": df_rows,"columns":df_columns}
+  return {"rows": df_rows,"columns":df_columns}'''
 
 @anvil.server.callable
 def list_uploaded_datasets():
+  """
+    Return a list of upload summaries (one per DB row that looks like an upload).
+    Each returned item is: {label, row_id, nrows, ncols, uploaded_at}
+    """
   try:
-    rows = []
-    # <<-- CHANGE THIS to the actual table name you created:
-    # If your table is named "uploaded_data" use that. If you really have approach1_data, keep it.
-    table = app_tables.approach1_data   # <<<<<< check this name
+    # Change this name if your uploads table is different
+    table_name = "approach1_data"   # <- use the table that contains the rows you printed
+    if not hasattr(app_tables, table_name):
+      avail = [n for n in dir(app_tables) if not n.startswith("_")]
+      return {"status": "error", "message": f"Table '{table_name}' not found. Available tables: {avail}"}
+
+    table = getattr(app_tables, table_name)
+
+    uploads = []
     for r in table.search():
-      print("Row keys:", list(r))
-      rows.append({
-        #"row_id": r.get_id(),
-        "name":  r.get("name"),
-        "nrows": r.get("nrows"),
-        "ncols": r.get("ncols"),
-        "uploaded_at": r.get("uploaded_at")
+      try:
+        row_id = r.get_id()
+      except Exception:
+        row_id = None
+
+        # Use safe .get with default None to avoid the 'get' quirk on missing fields
+      name = r.get("name") if "name" in r else (r.get("processed_name") if "processed_name" in r else None)
+      nrows = r.get("nrows") if "nrows" in r else None
+      ncols = r.get("ncols") if "ncols" in r else None
+      uploaded_at = r.get("uploaded_at") if "uploaded_at" in r else None
+
+      label = name or f"Upload {row_id}"
+      # Append summary
+      uploads.append({
+        "label": label,
+        "row_id": row_id,
+        "nrows": nrows,
+        "ncols": ncols,
+        "uploaded_at": uploaded_at
       })
-    rows.sort(key=lambda x: x.get("uploaded_at") or datetime.min, reverse=True)
-    return {"status": "ok", "uploads": rows}
+
+      # sort by uploaded_at if present (newest first)
+    uploads.sort(key=lambda x: x.get("uploaded_at") or datetime.min, reverse=True)
+
+    return {"status": "ok", "uploads": uploads}
+
   except Exception as e:
-    # Print full traceback to server logs so you can inspect it in the Editor -> Logs
-    print("Error in list_uploaded_datasets():", e)
     traceback.print_exc()
-    return {"status": "error", "message": f"Server error: {type(e).__name__}: {e}"}
+    return {"status": "error", "message": f"{type(e).__name__}: {e}"}
+
+    def load_upload_records(row_id, max_rows=200):
+      """
+    Given an upload-row id (from list_uploaded_datasets), parse its data_json and
+    return up to max_rows records as a list of dicts for the client to display.
+    """
+    try:
+      # same table used earlier
+      table_name = "approach1_data"   # change if your upload row is in another table
+      table = getattr(app_tables, table_name)
+      row = table.get_by_id(row_id)
+      if row is None:
+        return {"status": "error", "message": "Row not found"}
+
+      data_json = row.get("data_json")
+      if not data_json:
+        return {"status": "error", "message": "No data_json found in this row"}
+
+        # Parse pandas orient='split' JSON
+      try:
+        df = pd.read_json(data_json, orient="split")
+      except Exception:
+        # fallback: maybe it's a JSON string containing the structure
+        try:
+          obj = json.loads(data_json)
+          # try DataFrame from obj (if obj has "data" and "columns")
+          if isinstance(obj, dict) and "data" in obj and "columns" in obj:
+            df = pd.DataFrame(obj["data"], columns=obj["columns"])
+          else:
+            # last-resort: try constructing DataFrame directly
+            df = pd.DataFrame(obj)
+        except Exception as e2:
+          return {"status": "error", "message": f"Failed to parse data_json: {e2}"}
+
+        # Limit rows for preview if requested
+      if max_rows is not None:
+        df = df.iloc[:int(max_rows)]
+
+      records = df.to_dict(orient="records")
+      columns = df.columns.tolist()
+      return {"status": "ok", "columns": columns, "records": records, "nrows": df.shape[0], "ncols": df.shape[1]}
+
+    except Exception as e:
+      traceback.print_exc()
+      return {"status": "error", "message": f"{type(e).__name__}: {e}"}
 #Changes made in Dec 4 by ShiaoXu Ended
 
 @anvil.server.callable
