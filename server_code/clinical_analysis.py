@@ -11,7 +11,7 @@ import matplotlib
 matplotlib.use("Agg")     # Use non-GUI backend
 import matplotlib.pyplot as plt
 
-@anvil.server.callable
+@anvil.server.callablec                                                                                                                                                                                                                                                                                                                                                                                                 
 def analyze_dm_vs_non_dm(file_media):
   """
     Read uploaded CSV, run Welch's t-tests for DM vs Non-DM,
