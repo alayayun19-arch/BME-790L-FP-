@@ -33,8 +33,7 @@ class Approach3(Approach3Template):
       # Generate boxplots
       boxplot_img = anvil.server.call('generate_boxplots', self.uploaded_file)
       if boxplot_img:
-        plot_image = anvil.BlobMedia('image/png', boxplot_img, name='boxplots.png')
-        self.image_1.source = plot_image
+        self.image_1.source = boxplot_img
         self.image_1.visible = True
 
       # Generate forest plot

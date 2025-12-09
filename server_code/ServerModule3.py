@@ -258,7 +258,7 @@ def generate_boxplots(file):
     plt.close()
     print("test3")
 
-    return anvil.media.from_file(buffer, 'image/png')
+    return anvil.BlobMedia("image/png", buffer.read(), name="boxplots.png")
 
   except Exception as e:
     print(f"Error generating boxplots: {str(e)}")
@@ -343,8 +343,8 @@ def generate_forest_plot(file):
     plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
     buffer.seek(0)
     plt.close()
-    return buffer.getvalue()  # Return raw bytes
-    #return anvil.media.from_file(buffer, 'image/png')
+
+    return anvil.BlobMedia("image/png", buffer.read(), name="forest_plot.png")
 
   except Exception as e:
       print(f"Error generating forest plot: {str(e)}")
@@ -424,7 +424,7 @@ def generate_bmi_correlations(file):
         buffer.seek(0)
         plt.close()
 
-        return anvil.media.from_file(buffer, 'image/png')
+        return anvil.BlobMedia("image/png", buffer.read(), name="bmi_correlations.png")
 
     except Exception as e:
         print(f"Error generating BMI correlations: {str(e)}")
