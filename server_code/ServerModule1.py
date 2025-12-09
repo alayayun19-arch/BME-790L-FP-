@@ -39,8 +39,8 @@ def process_csv_file(file_media, store_as="dataframe_json"):
                   "Dmspecific FAMILY HISTORY","StrokeSpecific FAMILY HISTORY","OTHER","Medications",
                   "Right Eye findings","Left Eye findings"]
   Cleaned_raw = Cleaned_raw.drop(columns = cols_to_drop) 
-
-  # metadata
+  return Cleaned_raw
+  '''# metadata
   name = getattr(file_media, "name", "uploaded.csv")
   nrows, ncols = Cleaned_raw.shape
   uploaded_at = datetime.utcnow()
@@ -56,7 +56,7 @@ def process_csv_file(file_media, store_as="dataframe_json"):
       uploaded_at=uploaded_at
     )
     return {"status": "ok", "storage": "dataframe_json", "row_id": row.get_id()}
-
+'''
 @anvil.server.callable
 def load_dataframe_from_row(row_id):
   row = app_tables.approach1_data.get_by_id(row_id)
@@ -249,3 +249,5 @@ def store_df_in_session(result):
 @anvil.server.callable
 def get_df_from_session():
   return anvil.server.session.get('df_data')
+
+  

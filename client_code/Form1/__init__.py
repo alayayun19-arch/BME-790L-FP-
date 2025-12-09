@@ -40,10 +40,10 @@ class Form1(Form1Template):
       anvil.alert("Error processing file on server:\n" + str(e))
       return
 
-    if result.get("status") == "ok":
+    '''if result.get("status") == "ok":
       anvil.alert(f"Saved OK (storage={result.get('storage')}). Row id: {result.get('row_id')}")
     else:
-      anvil.alert("Server returned error: " + str(result))
+      anvil.alert("Server returned error: " + str(result))'''
 
     open_form("Approach1")
     pass

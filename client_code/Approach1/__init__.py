@@ -110,21 +110,6 @@ class Approach1(Approach1Template):
     # 5) success
     anvil.alert("Loaded preview: showing first rows. Columns: " + ", ".join((cols or list(records[0].keys()))[:10]))
   #Finish
-  
-  def form_show(self, **event_args):
-    """Called when form is shown."""
-    self._load_data()
-
-  def data_grid_1_show(self, **event_args):
-    """Called when the DataGrid is shown (Designer wired this)."""
-    # In case the grid gets shown before form_show, ensure data is loaded
-    self._load_data()
-
-  def data_grid_2_show(self, **event_args):
-    """This method is called when the data grid is shown on the screen"""
-    self.columns = [{"title":"A","data_key":"A"},{"title":"B","data_key":"B"}]
-    self.items = [{"A": 1, "B": 2}, {"A": 3, "B": 4}]
-    pass
 
   def button_test_click(self, **event_args):
     """This method is called when the button is clicked"""
