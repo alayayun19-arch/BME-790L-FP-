@@ -12,37 +12,134 @@ components:
 - event_bindings: {click: returnhome_click}
   layout_properties: {grid_position: 'XVOOYY,KBQAII'}
   name: returnhome
-  properties: {background: 'theme:Primary Container', foreground: 'theme:Primary', text: Home}
+  properties: {background: 'theme:Primary Container', bold: true, foreground: 'theme:Primary', text: Home}
   type: Button
 - layout_properties: {grid_position: 'VQYUWJ,UMVQXI'}
   name: label_2
   properties: {bold: true, font_size: 18, role: headline, text: Please upload the clinial data}
   type: Label
-- layout_properties: {grid_position: 'ZJICDT,IJNDNW'}
-  name: file_loader_1
-  properties: {background: 'theme:Primary Container', text: Upload your data here}
+- data_bindings: []
+  event_bindings: {change: file_loader_clinical_change}
+  layout_properties: {grid_position: 'ZJICDT,IJNDNW'}
+  name: file_loader_clinical
+  properties: {background: 'theme:Primary Container', bold: true, file_types: .csv, multiple: false, text: Upload your data here}
   type: FileLoader
-- layout_properties: {grid_position: 'ZJICDT,EGFJKA'}
-  name: button_1
+- event_bindings: {click: button_run_analysis_click}
+  layout_properties: {grid_position: 'ZJICDT,EGFJKA'}
+  name: button_run_analysis
   properties: {background: 'theme:Primary Container', icon: 'fa:area-chart', text: Start analysis}
   type: Button
+- layout_properties: {grid_position: 'GWQZVC,UAKZPR'}
+  name: label_status
+  properties: {text: Ready}
+  type: Label
 - layout_properties: {grid_position: 'UULUYQ,LGKDYS'}
   name: label_4
   properties: {bold: true, font_size: 18, text: 'Demographic characteristics of the non-diabetic and diabetic groups:'}
   type: Label
 - components:
-  - name: repeating_panel_1
+  - name: repeating_panel_demographics
     properties: {item_template: Approach21.RowTemplate5}
     type: RepeatingPanel
   layout_properties: {grid_position: 'JLNMQC,IXENJI'}
   name: Demographic_characteristics
   properties:
     columns:
-    - {data_key: column_1, id: JKSDUP, title: Metric}
-    - {data_key: column_2, id: VJQQOR, title: Non-diabetic Group}
-    - {data_key: column_3, expand: false, id: OJLQEN, title: Diabetic Group, width: 248.333251953125}
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'KOXEJY,PZWNGR'}
+  name: label_gm_title
+  properties: {align: center, bold: true, font_size: 18, text: GM analysis}
+  type: Label
+- layout_properties: {grid_position: 'IKTPBE,TUAZRO'}
+  name: image_gm
+  properties: {height: 292.49993896484375}
+  type: Image
+- components:
+  - name: repeating_panel_gm
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'YFBYFU,FWLHZL'}
+  name: datagrid_gm
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'RFIQJO,IJBIUV'}
+  name: label_wm_title
+  properties: {align: center, bold: true, font_size: 18, text: WM analysis}
+  type: Label
+- layout_properties: {grid_position: 'JENWFW,SCZTOB'}
+  name: image_wm
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_wm
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'ZUXUVC,XBZCYM'}
+  name: datagrid_wm
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'KLANMQ,GZZQRN'}
+  name: label_csf_title
+  properties: {align: center, bold: true, font_size: 18, text: CSF analysis}
+  type: Label
+- layout_properties: {grid_position: 'FNHWRA,JEPMJS'}
+  name: image_csf
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_csf
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'TCXWME,TLRFKR'}
+  name: datagrid_csf
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'NSWKWH,AKFAVU'}
+  name: label_wmh_title
+  properties: {align: center, bold: true, font_size: 18, text: WMH analysis}
+  type: Label
+- layout_properties: {grid_position: 'WNBIRI,IGOMUA'}
+  name: image_wmh
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_wmh
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'HDIKYD,PGTGXL'}
+  name: datagrid_wmh
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
   type: DataGrid
 container:
-  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"ALDVPY":55,"IJNDNW":35,"EGFJKA":25}', visible: true}
+  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"IJNDNW":35,"EGFJKA":25,"TUAZRO":60}', visible: true}
   type: ColumnPanel
 is_package: true
