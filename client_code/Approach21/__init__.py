@@ -63,9 +63,7 @@ class Approach21(Approach21Template):
     finally:
       self.button_run_analysis.enabled = True
 
-  # =============================================================
-  #         NEW BUTTON: PLOT (ONLY generates the bar plot)
-  # =============================================================
+  # PLOT 
   def button_plot_click(self, **event_args):
     if self.analysis_result is None:
       alert("Please run analysis first.")

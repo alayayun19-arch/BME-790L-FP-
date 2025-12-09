@@ -54,9 +54,9 @@ components:
     name: hvlt_datagrid
     properties:
       columns:
-      - {data_key: roi, expand: false, id: JKSDUP, title: Brian Region, width: 111}
-      - {data_key: p, expand: false, id: VJQQOR, title: p, width: 108.66665649414062}
-      - {data_key: r2_aj, expand: false, id: OJLQEN, title: r2_aj, width: 118.66665649414062}
+      - {data_key: roi, expand: false, id: JKSDUP, title: Brian Region, width: 131.33331298828125}
+      - {data_key: p, expand: false, id: VJQQOR, title: p, width: 116.33331298828125}
+      - {data_key: r2_adj, expand: false, id: OJLQEN, title: r2_adj, width: 113.33331298828125}
     type: DataGrid
   - layout_properties: {grid_position: 'ATVPTE,RCIWUW GKUMGV,JWQKHR'}
     name: label_vf_title
@@ -76,7 +76,7 @@ components:
       columns:
       - {data_key: roi, expand: false, id: JKSDUP, title: Brian Region}
       - {data_key: p, expand: false, id: VJQQOR, title: p, width: 106}
-      - {data_key: r2_aj, expand: false, id: OJLQEN, title: r2_aj, width: 106.6666259765625}
+      - {data_key: r2_adj, expand: false, id: OJLQEN, title: r2_adj, width: 106.6666259765625}
     type: DataGrid
   layout_properties: {slot: default}
   name: content_panel

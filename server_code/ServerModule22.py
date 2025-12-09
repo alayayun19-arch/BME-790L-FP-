@@ -123,7 +123,7 @@ def analyze_dti_cognition(file_media):
 
       # --- format three decimals as STRING ---
       p_fmt = "" if np.isnan(p_val) else f"{p_val:.3f}"
-      r2_fmt = "" if np.isnan(r2) else f"{r2}"
+      r2_fmt = "" if np.isnan(r2) else f"{r2:.3f}"
 
       rows.append({
         "outcome": outcome_label,

@@ -131,7 +131,7 @@ def analyze_dm_vs_non_dm(file_media):
 
 
 # ===================================================
-# 2) New function: generate the bar plot
+# 2) generate the bar plot
 # ===================================================
 @anvil.server.callable
 def generate_plot(dm_dict, non_dict):
