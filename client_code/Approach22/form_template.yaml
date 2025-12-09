@@ -1,6 +1,6 @@
 components:
 - components:
-  - layout_properties: {grid_position: 'ZQERAY,IQCUZT KWBFQA,VVCKJL'}
+  - layout_properties: {grid_position: 'ZQERAY,IQCUZT'}
     name: label_1
     properties:
       bold: true
@@ -11,21 +11,22 @@ components:
         Approach 2
         Part 2. Relations between microstructural measures and cognition (DM group only)
     type: Label
-  - layout_properties: {grid_position: 'ZQERAY,IQCUZT NNSORD,PYIURV'}
-    name: label_3
-    properties:
-      bold: true
-      font_size: 19
-      text: |2
-         DTI metrics vs cognition
-    type: Label
   - layout_properties: {grid_position: 'ZQERAY,DOFLMC'}
     name: returnhome
     properties: {background: 'theme:Primary Container', text: Home}
     type: Button
+  - layout_properties: {grid_position: 'ZDKRNY,REDRYR'}
+    name: label_3
+    properties:
+      align: center
+      bold: true
+      font_size: 19
+      text: |
+        DTI metrics vs cognition
+    type: Label
   - layout_properties: {grid_position: 'VMFHGW,ABZWRI'}
     name: label_2_copy
-    properties: {bold: false, font_size: 17, role: headline, text: Please upload the clinial data}
+    properties: {bold: true, font_size: 16, role: headline, text: Please upload the clinial data}
     type: Label
   - event_bindings: {change: file_loader_1_copy_change}
     layout_properties: {grid_position: 'IAGVQL,AXIMCK'}
@@ -36,85 +37,19 @@ components:
     name: button_1
     properties: {background: 'theme:Primary Container', icon: 'fa:bar-chart', text: Start Analysis}
     type: Button
-  - layout_properties: {grid_position: 'LBABKE,YLPDGO'}
+  - layout_properties: {grid_position: 'WXJKCW,AMQJOX'}
     name: label_2
-    properties: {font_size: 17, text: 'Global DTI metrics and cognitive performance '}
+    properties: {align: center, bold: true, text: HVLT Total Score}
     type: Label
   - components:
     - name: repeating_panel_1_copy
       properties: {item_template: Approach21.RowTemplate5}
       type: RepeatingPanel
-    - components:
-      - name: repeating_panel_1_copy_copy_2
-        properties: {item_template: Approach21.RowTemplate5}
-        type: RepeatingPanel
-      layout_properties: {}
-      name: Demographic_characteristics_copy_2
-      properties:
-        columns:
-        - {data_key: column_1, expand: false, id: JKSDUP, title: HVLT (T scores), width: 190.99996948242188}
-        - {data_key: column_2, id: VJQQOR, title: whole brain FA}
-        - {data_key: column_3, expand: false, id: OJLQEN, title: whole brain L1, width: 200}
-        - {data_key: column_1, id: RRKBSO, title: whole brain MD}
-        - {data_key: column_1, id: NJFKCS, title: whole brain RD}
-      type: DataGrid
     layout_properties: {grid_position: 'UFTSSX,GZSCVQ'}
     name: Demographic_characteristics
     properties:
       columns:
-      - {data_key: column_1, expand: false, id: JKSDUP, title: VF animals (T scores), width: 190.99996948242188}
-      - {data_key: column_2, id: VJQQOR, title: whole brain FA}
-      - {data_key: column_3, expand: false, id: OJLQEN, title: whole brain L1, width: 200}
-      - {data_key: column_1, id: RRKBSO, title: whole brain MD}
-      - {data_key: column_1, id: NJFKCS, title: whole brain RD}
-    type: DataGrid
-  - layout_properties: {grid_position: 'FRBOSM,FDKMVT'}
-    name: label_3_copy
-    properties:
-      bold: true
-      font_size: 19
-      text: |
-        Regional DTI metrics vs cognition
-    type: Label
-  - layout_properties: {grid_position: 'HUHAEU,OXWHMU'}
-    name: label_2_copy_copy
-    properties: {bold: false, font_size: 17, role: headline, text: Please upload the clinial data}
-    type: Label
-  - layout_properties: {grid_position: 'TDRDYG,XSFZAJ'}
-    name: file_loader_1_copy_copy
-    properties: {background: 'theme:Primary Container', text: Upload .csv file here}
-    type: FileLoader
-  - layout_properties: {grid_position: 'TDRDYG,TFCYSP'}
-    name: button_3
-    properties: {background: 'theme:Primary Container', bold: false, icon: 'fa:bar-chart', text: Start Analysis}
-    type: Button
-  - layout_properties: {grid_position: 'IAOQCG,CAKECO'}
-    name: label_2_copy_3
-    properties: {font_size: 17, text: 'Regional DTI metrics and cognitive performance '}
-    type: Label
-  - components:
-    - name: repeating_panel_1_copy_copy
-      properties: {item_template: Approach21.RowTemplate5}
-      type: RepeatingPanel
-    - components:
-      - name: repeating_panel_1_copy_copy_2_copy
-        properties: {item_template: Approach21.RowTemplate5}
-        type: RepeatingPanel
-      layout_properties: {}
-      name: Demographic_characteristics_copy_2_copy
-      properties:
-        columns:
-        - {data_key: column_1, expand: false, id: JKSDUP, title: HVLT (T scores), width: 190.99996948242188}
-        - {data_key: column_2, id: VJQQOR, title: whole brain FA}
-        - {data_key: column_3, expand: false, id: OJLQEN, title: whole brain L1, width: 200}
-        - {data_key: column_1, id: RRKBSO, title: whole brain MD}
-        - {data_key: column_1, id: NJFKCS, title: whole brain RD}
-      type: DataGrid
-    layout_properties: {grid_position: 'IXURTE,NSNPAZ'}
-    name: Demographic_characteristics_copy
-    properties:
-      columns:
-      - {data_key: column_1, expand: false, id: JKSDUP, title: VF animals (T scores), width: 190.99996948242188}
+      - {data_key: column_1, expand: false, id: JKSDUP, title: Brian Region, width: 190.99996948242188}
       - {data_key: column_2, id: VJQQOR, title: whole brain FA}
       - {data_key: column_3, expand: false, id: OJLQEN, title: whole brain L1, width: 200}
       - {data_key: column_1, id: RRKBSO, title: whole brain MD}
