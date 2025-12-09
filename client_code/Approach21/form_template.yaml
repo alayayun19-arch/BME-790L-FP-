@@ -51,11 +51,95 @@ components:
     - {data_key: p_value, id: WMYIUM, title: p_value}
     rows_per_page: 30
   type: DataGrid
+- layout_properties: {grid_position: 'KOXEJY,PZWNGR'}
+  name: label_gm_title
+  properties: {align: center, bold: true, font_size: 18, text: GM analysis}
+  type: Label
 - layout_properties: {grid_position: 'IKTPBE,TUAZRO'}
-  name: image_1
+  name: image_gm
   properties: {height: 292.49993896484375}
   type: Image
+- components:
+  - name: repeating_panel_gm
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'YFBYFU,FWLHZL'}
+  name: datagrid_gm
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'RFIQJO,IJBIUV'}
+  name: label_wm_title
+  properties: {align: center, bold: true, font_size: 18, text: WM analysis}
+  type: Label
+- layout_properties: {grid_position: 'JENWFW,SCZTOB'}
+  name: image_wm
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_wm
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'ZUXUVC,XBZCYM'}
+  name: datagrid_wm
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'KLANMQ,GZZQRN'}
+  name: label_csf_title
+  properties: {align: center, bold: true, font_size: 18, text: CSF analysis}
+  type: Label
+- layout_properties: {grid_position: 'FNHWRA,JEPMJS'}
+  name: image_csf
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_csf
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'TCXWME,TLRFKR'}
+  name: datagrid_csf
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
+- layout_properties: {grid_position: 'NSWKWH,AKFAVU'}
+  name: label_wmh_title
+  properties: {align: center, bold: true, font_size: 18, text: WMH analysis}
+  type: Label
+- layout_properties: {grid_position: 'WNBIRI,IGOMUA'}
+  name: image_wmh
+  properties: {}
+  type: Image
+- components:
+  - name: repeating_panel_wmh
+    properties: {item_template: Approach21.RowTemplate5}
+    type: RepeatingPanel
+  layout_properties: {grid_position: 'HDIKYD,PGTGXL'}
+  name: datagrid_wmh
+  properties:
+    columns:
+    - {data_key: metric, id: JKSDUP, title: Metric}
+    - {data_key: dm_mean_sd, expand: false, id: VJQQOR, title: Non-diabetic Group, width: 126}
+    - {data_key: non_dm_mean_sd, expand: false, id: OJLQEN, title: Diabetic Group, width: 246.9998779296875}
+    - {data_key: p_value, id: WMYIUM, title: p_value}
+    rows_per_page: 30
+  type: DataGrid
 container:
-  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"ALDVPY":55,"IJNDNW":35,"EGFJKA":25}', visible: true}
+  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"IJNDNW":35,"EGFJKA":25,"TUAZRO":60}', visible: true}
   type: ColumnPanel
 is_package: true
