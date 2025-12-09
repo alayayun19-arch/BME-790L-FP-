@@ -71,4 +71,9 @@ class Approach1(Approach1Template):
     finally:
       self.independency_check.enabled = True
 
+  def button_1_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    open_form("Approach1_2")
+    pass
+
   
