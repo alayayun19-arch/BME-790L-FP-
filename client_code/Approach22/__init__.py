@@ -84,3 +84,4 @@ class Approach22(Approach22Template):
   # Return home
   def returnhome_click(self, **event_args):
     open_form("Form1")
+    pass

@@ -21,7 +21,7 @@ components:
 - event_bindings: {change: file_loader_clinical_change}
   layout_properties: {grid_position: 'ZJICDT,IJNDNW'}
   name: file_loader_clinical
-  properties: {background: 'theme:Primary Container', bold: true, file_types: .csv, multiple: false, text: Upload your data here}
+  properties: {background: 'theme:Primary Container', bold: true, file_types: .csv, multiple: false, text: Upload Brain_ICVdata_final.csv}
   type: FileLoader
 - event_bindings: {click: button_run_analysis_click}
   layout_properties: {grid_position: 'ZJICDT,EGFJKA'}

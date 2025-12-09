@@ -11,7 +11,8 @@ components:
         Approach 2
         Part 2. Relations between microstructural measures and cognition (DM group only)
     type: Label
-  - layout_properties: {grid_position: 'ZQERAY,DOFLMC'}
+  - event_bindings: {click: returnhome_click}
+    layout_properties: {grid_position: 'ZQERAY,DOFLMC'}
     name: returnhome
     properties: {background: 'theme:Primary Container', text: Home}
     type: Button
@@ -31,7 +32,7 @@ components:
   - event_bindings: {change: file_loader_change}
     layout_properties: {grid_position: 'IAGVQL,AXIMCK'}
     name: file_loader
-    properties: {background: 'theme:Primary Container', text: Upload your data here}
+    properties: {background: 'theme:Primary Container', text: Upload Brain_ICVdata_final.csv}
     type: FileLoader
   - event_bindings: {click: run_btn_click}
     layout_properties: {grid_position: 'IAGVQL,GZQSLB'}
