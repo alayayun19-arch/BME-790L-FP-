@@ -1,0 +1,7 @@
+components:
+- layout_properties: {grid_position: 'YNFLCY,STXXQB'}
+  name: flow_panel_1
+  properties: {}
+  type: FlowPanel
+container: {type: ColumnPanel}
+is_package: true

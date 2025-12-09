@@ -25,11 +25,6 @@ components:
         role: [title]
         text: 'Approach 1: Clinical Data'
       type: Label
-    - event_bindings: {change: file_loader_app1_change}
-      layout_properties: {grid_position: 'OJQNEU,VISUSE'}
-      name: file_loader_app1
-      properties: {background: 'theme:Primary Container', text: 'Upload .csv file here '}
-      type: FileLoader
     - event_bindings: {click: button_app1_click}
       layout_properties: {grid_position: 'OJQNEU,LIKEOB'}
       name: button_app1
@@ -43,20 +38,27 @@ components:
     name: content_panel
     properties: {col_widths: '{}'}
     type: ColumnPanel
+  - layout_properties: {grid_position: 'PPKIQM,LYGLXK'}
+    name: label_2
+    properties:
+      foreground: theme:Primary
+      icon: fa:angle-double-right
+      role: [title, headline]
+      text: 'Approach 2: MRI Data'
+    type: Label
   - components:
-    - data_bindings: []
+    - event_bindings: {click: approach2_part1_click}
       layout_properties: {}
-      name: label_2
+      name: approach2_part1
+      properties: {background: 'theme:Primary Container', text: 'Part 1: Brain Region Atrophy Analysis'}
+      type: Button
+    - event_bindings: {click: approach2_part2_click}
+      layout_properties: {}
+      name: approach2_part2
       properties:
-        foreground: theme:Primary
-        icon: fa:angle-double-right
-        role: [title, headline]
-        text: 'Approach 2:'
-      type: Label
-    - event_bindings: {click: button_app2_click}
-      layout_properties: {}
-      name: button_app2
-      properties: {text: Jump}
+        background: theme:Primary Container
+        text: |
+          Part 2: Relations between microstructural measures and cognition
       type: Button
     - components:
       - layout_properties: {}
