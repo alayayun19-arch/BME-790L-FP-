@@ -14,14 +14,13 @@ import json
 import numpy as np
 from datetime import datetime
 import traceback
+import dcor
+from sklearn.preprocessing import OneHotEncoder
+# distance correlation library (must be available on server)
 #import wfdb
 #import matplotlib.pyplot as plt
 #Changes made in Dec 4 by ShiaoXu Start
   
-@anvil.server.callable
-def ping():
-  """Simple test to confirm server callables are available."""
-  return "pong"
 @anvil.server.callable
 def process_csv_file(file_media):
   """
@@ -42,198 +41,219 @@ def process_csv_file(file_media):
   records = Cleaned_raw.to_dict(orient="records")   # list of row dicts
   columns = Cleaned_raw.columns.tolist()            # list of feature names
   return {"records": records, "columns": columns}
-  
-@anvil.server.callable
-def load_dataframe_from_row(row_id):
-  row = app_tables.approach1_data.get_by_id(row_id)
-  if not row:
-    return {"status": "error", "msg": "row not found"}
 
-  if row.get("data_json"):
-    json_str = row["data_json"]
-    df = pd.read_json(json_str, orient="split")
-    # DataFrame cannot be returned directly to the client; return serializable form
-    return {
-      "status": "ok",
-      "nrows": row["nrows"],
-      "ncols": row["ncols"],
-      "columns": df.columns.tolist(),
-      "data_records": df.to_dict(orient="records")  # list of dicts serializable to client
-    }
+# ServerModule1.py  -- paste/replace into your server module
 
-  elif row.get("array_blob"):
-    # return the blob so the client can download or re-create a numpy array
-    return {
-      "status": "ok",
-      "array_blob": row["array_blob"],
-      "nrows": row["nrows"],
-      "ncols": row["ncols"]
-    }
+import anvil.server
+import pandas as pd
+import numpy as np
+from io import BytesIO
+import traceback
 
+from sklearn.preprocessing import OneHotEncoder
+import dcor   # ensure dcor is available in your server environment
+
+# -------------------------
+# Helper: read & clean input
+# -------------------------
+def read_clean_from_media(file_media):
+  raw_bytes = file_media.get_bytes()
+  Raw_data = pd.read_csv(BytesIO(raw_bytes), encoding="ISO-8859-1")
+  # drop columns with >20% missing
+  Cleaned_raw = Raw_data.dropna(axis=1, thresh=int(0.8 * len(Raw_data)))
+  cols_to_drop = [
+    'cancSpec FAMILY HISTORY', "Hdspecific FAMILY HISTORY", "HTNspecific FAMILY HISTORY",
+    "Dmspecific FAMILY HISTORY", "StrokeSpecific FAMILY HISTORY", "OTHER", "Medications",
+    "Right Eye findings", "Left Eye findings"
+  ]
+  Cleaned_raw = Cleaned_raw.drop(columns=[c for c in cols_to_drop if c in Cleaned_raw.columns], errors='ignore')
+  return Cleaned_raw.reset_index(drop=True)
+
+# ----------------------------------------------------
+# Helper: pairing visits (your original pairing logic)
+# ----------------------------------------------------
+def independence_check_pairing(Cleaned_raw):
+  Pair_2V = []
+  Pair_8V = []
+  n = len(Cleaned_raw)
+  if ("patient ID" not in Cleaned_raw.columns) or ("Visit" not in Cleaned_raw.columns):
+    raise ValueError("Input CSV must contain 'patient ID' and 'Visit' columns.")
+  for i in range(n):
+    if Cleaned_raw["Visit"].iat[i] == 8:
+      break
+    for j in range(i + 1, n):
+      if (Cleaned_raw["patient ID"].iat[i] == Cleaned_raw["patient ID"].iat[j]) and \
+      (Cleaned_raw["Visit"].iat[i] != Cleaned_raw["Visit"].iat[j]):
+        Pair_2V.append(Cleaned_raw.iloc[i, :])
+        Pair_8V.append(Cleaned_raw.iloc[j, :])
+  Pair_2V_df = pd.DataFrame(Pair_2V).reset_index(drop=True)
+  Pair_8V_df = pd.DataFrame(Pair_8V).reset_index(drop=True)
+  return Pair_2V_df, Pair_8V_df
+
+# ----------------------------
+# Helper: separate numeric/cat
+# ----------------------------
+def separate_types(df):
+  num_cols = df.select_dtypes(include=['number']).columns.tolist()
+  cat_cols = df.select_dtypes(exclude=['number']).columns.tolist()
+  return num_cols, cat_cols
+
+# -----------------------------------------
+# One-Hot Encoding (use sparse_output param)
+# -----------------------------------------
+def OHT_cat(df_target, cat_cols):
+  # copy input
+  df = df_target.copy()
+  # normalize categorical columns to string uppercase (avoid None mix)
+  for col in cat_cols:
+    df[col] = df[col].astype(str).str.upper()
+  if len(cat_cols) == 0:
+    # ensure numeric types where possible
+    return df.apply(pd.to_numeric, errors='coerce').fillna(0)
+
+    # sklearn versions >=1.2 use sparse_output
+  enc = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
+  X = df[cat_cols].fillna("NAN")
+  enc.fit(X)
+  Y = enc.transform(X)  # numeric array
+  oht_colnames = enc.get_feature_names_out(cat_cols)
+  # ensure numeric dtype
+  df_oht = pd.DataFrame(Y.astype(float), columns=oht_colnames, index=df.index)
+
+  df_rest = df.drop(columns=cat_cols)
+  # coerce rest to numeric where possible
+  df_rest = df_rest.apply(pd.to_numeric, errors='coerce').fillna(0)
+  df_combined = pd.concat([df_rest, df_oht], axis=1)
+  # final coercion to numeric and fill
+  df_combined = df_combined.apply(pd.to_numeric, errors='coerce').fillna(0)
+  return df_combined
+
+# ---------------------------------------------------
+# Robust conversion of DataFrame -> float numpy matrix
+# ---------------------------------------------------
+def df_to_float_matrix(df, name=None):
+  # coerce everything to numeric, convert NaN->0, return float numpy matrix
+  df_numeric = df.apply(pd.to_numeric, errors='coerce').fillna(0)
+  # if any object dtype remains, force all to float
+  if any(df_numeric.dtypes == 'object'):
+    df_numeric = df_numeric.astype(float)
+  mat = df_numeric.to_numpy(dtype=float)
+  return mat
+
+# ---------------------------------------------------
+# Permutation test using distance correlation (dcor)
+# ---------------------------------------------------
+def perm_test_dcor(arr1, arr2, n_perm=200, random_state=None):
+  # ensure numeric float arrays
+  a = np.asarray(arr1, dtype=float)
+  b = np.asarray(arr2, dtype=float)
+
+  # ensure 2D
+  if a.ndim == 1:
+    a = a.reshape((a.shape[0], 1)) if a.size else a.reshape((0,1))
+  if b.ndim == 1:
+    b = b.reshape((b.shape[0], 1)) if b.size else b.reshape((0,1))
+
+  if not np.issubdtype(a.dtype, np.floating) or not np.issubdtype(b.dtype, np.floating):
+    raise TypeError(f"perm_test_dcor expects numeric float arrays; got dtypes {a.dtype}, {b.dtype}")
+
+  rng = np.random.default_rng(random_state)
+  stat_obs = dcor.distance_correlation(a, b)
+  perms = 0
+  for _ in range(n_perm):
+    b_perm = rng.permutation(b)
+    stat = dcor.distance_correlation(a, b_perm)
+    if stat >= stat_obs:
+      perms += 1
+  pval = (perms + 1) / (n_perm + 1)
+  return float(stat_obs), float(pval)
+
+# ---------------------------------------------------
+# Main analysis wrapper (Task1_from_df)
+# ---------------------------------------------------
+def Task1_from_df(Cleaned_raw, n_perm=200, random_state=42):
+  """
+    Perform pairing, OHE (after dropping unwanted first column), and two dcor tests:
+     - with OHE (all features)
+     - numeric-only
+    Returns a dict summary.
+    """
+  Pair_2V_df, Pair_8V_df = independence_check_pairing(Cleaned_raw)
+  if Pair_2V_df.empty or Pair_8V_df.empty:
+    return {"conclusion": "No paired revisit data found.", "n_pairs": 0}
+
+    # --- DROP the first column before OHE (this avoids sample ID like 'S0030') ---
+    # create OHE inputs by dropping the first column from each pair frame
+  drop_col_2v = Pair_2V_df.columns[0]
+  drop_col_8v = Pair_8V_df.columns[0]
+  ohe_input_2V = Pair_2V_df.drop(columns=[drop_col_2v])
+  ohe_input_8V = Pair_8V_df.drop(columns=[drop_col_8v])
+
+  # find categorical columns on the reduced frames
+  _, cat_cols_2V = separate_types(ohe_input_2V)
+  cat_cols_2V_noid = [c for c in cat_cols_2V if c != "patient ID"]  # avoid patient ID if present
+  numerized_2V = OHT_cat(ohe_input_2V, cat_cols_2V_noid)
+
+  _, cat_cols_8V = separate_types(ohe_input_8V)
+  cat_cols_8V_noid = [c for c in cat_cols_8V if c != "patient ID"]
+  numerized_8V = OHT_cat(ohe_input_8V, cat_cols_8V_noid)
+
+  # force numeric float matrices for dcor
+  np_2V = df_to_float_matrix(numerized_2V, name="numerized_2V")
+  np_8V = df_to_float_matrix(numerized_8V, name="numerized_8V")
+
+  # align shapes if needed (use intersection of columns)
+  if np_2V.shape[1] != np_8V.shape[1]:
+    common_cols = list(set(numerized_2V.columns).intersection(set(numerized_8V.columns)))
+    if len(common_cols) == 0:
+      # if no common columns, make them empty matrices (stat not meaningful)
+      np_2V = np.empty((np_2V.shape[0], 0), dtype=float)
+      np_8V = np.empty((np_8V.shape[0], 0), dtype=float)
+    else:
+      numerized_2V_aligned = numerized_2V[common_cols].apply(pd.to_numeric, errors='coerce').fillna(0)
+      numerized_8V_aligned = numerized_8V[common_cols].apply(pd.to_numeric, errors='coerce').fillna(0)
+      np_2V = numerized_2V_aligned.to_numpy(dtype=float)
+      np_8V = numerized_8V_aligned.to_numpy(dtype=float)
+
+    # compute perm test for dcor (with OHE)
+  stat_obs, pval = perm_test_dcor(np_2V, np_8V, n_perm=n_perm, random_state=random_state)
+
+  # numeric-only test: select numeric columns then coerce
+  num_df_2 = Pair_2V_df.select_dtypes(include=['number']).apply(pd.to_numeric, errors='coerce').fillna(0)
+  num_df_8 = Pair_8V_df.select_dtypes(include=['number']).apply(pd.to_numeric, errors='coerce').fillna(0)
+  if num_df_2.shape[1] == 0 or num_df_8.shape[1] == 0:
+    stat_obs2, pval2 = (None, None)
   else:
-    return {"status": "error", "msg": "no data found in row"}
+    # align numeric columns
+    common_num_cols = list(set(num_df_2.columns).intersection(set(num_df_8.columns)))
+    if len(common_num_cols) > 0:
+      np_2V_num = num_df_2[common_num_cols].to_numpy(dtype=float)
+      np_8V_num = num_df_8[common_num_cols].to_numpy(dtype=float)
+      stat_obs2, pval2 = perm_test_dcor(np_2V_num, np_8V_num, n_perm=n_perm, random_state=random_state)
+    else:
+      stat_obs2, pval2 = (None, None)
 
-'''def save_uploaded_file(file):
-  # Read uploaded CSV into pandas DataFrame
-  Raw_data = pd.read_csv(BytesIO(file.get_bytes()),encoding = "ISO-8859-1")
-  #missing_counts = Raw_data.isnull().sum()
-  Cleaned_raw = Raw_data.dropna(axis = 1, thresh = int(0.8*len(Raw_data)))
-  cols_to_drop = ['cancSpec FAMILY HISTORY',"Hdspecific FAMILY HISTORY","HTNspecific FAMILY HISTORY",
-                 "Dmspecific FAMILY HISTORY","StrokeSpecific FAMILY HISTORY","OTHER","Medications",
-                 "Right Eye findings","Left Eye findings"]
-  Cleaned_raw = Cleaned_raw.drop(columns = cols_to_drop)  
-  # Convert to list of dicts for display in DataGrid
-  df_rows = Cleaned_raw.to_dict(orient = 'records')
-  df_columns = list(Cleaned_raw.columns)
-  return {"rows": df_rows,"columns":df_columns}'''
+  conclusion = "Conclusion for part 1: Dependent for revisits; Cannot be considered as separate dataset"
+
+  return {
+    "conclusion": conclusion,
+    "n_pairs": len(Pair_2V_df),
+    "dcor_with_ohe": {"stat": stat_obs, "pval": pval},
+    "dcor_numeric_only": {"stat": stat_obs2, "pval": pval2}
+  }
+
+# ---------------------------------------------------
+# Server-callable wrapper
+# ---------------------------------------------------
 @anvil.server.callable
-def load_upload_records(row_id, max_rows=200):
-  """
-    Given a row id (from list_uploaded_datasets), parse its data_json and
-    return up to max_rows records as a list of dicts for the client to display.
-    """
+def independency_check(file_media, n_perm=200):
   try:
-    table_name = "approach1_data"   # <<-- change this if your upload rows are in another table
-    if not hasattr(app_tables, table_name):
-      return {"status":"error", "message": f"Table '{table_name}' not found in app_tables."}
-
-    table = getattr(app_tables, table_name)
-    row = table.get_by_id(row_id)
-    if row is None:
-      return {"status":"error", "message":"Row not found (bad row_id?)"}
-
-    data_json = row.get("data_json")
-    if not data_json:
-      return {"status":"error", "message":"No data_json found in this row"}
-
-      # Try parsing as pandas orient='split' JSON
-    try:
-      df = pd.read_json(data_json, orient="split")
-    except Exception:
-      # Fallback: try loading as plain JSON with keys 'columns' and 'data'
-      try:
-        obj = json.loads(data_json)
-        if isinstance(obj, dict) and "columns" in obj and "data" in obj:
-          df = pd.DataFrame(obj["data"], columns=obj["columns"])
-        else:
-          df = pd.DataFrame(obj)
-      except Exception as e2:
-        return {"status":"error", "message": f"Failed to parse data_json: {e2}"}
-
-        # Limit rows if requested (preview)
-    if max_rows is not None:
-      df = df.iloc[:int(max_rows)]
-
-    records = df.to_dict(orient='records')
-    columns = df.columns.tolist()
-    return {"status":"ok", "columns": columns, "records": records, "nrows": df.shape[0], "ncols": df.shape[1]}
-
+    if file_media is None:
+      return {"ok": False, "error": "No file provided."}
+    df = read_clean_from_media(file_media)
+    res = Task1_from_df(df, n_perm=n_perm, random_state=42)
+    return {"ok": True, "result": res}
   except Exception as e:
-    # print traceback to server logs for debugging
-    traceback.print_exc()
-    return {"status":"error", "message": f"{type(e).__name__}: {e}"}
-    
-@anvil.server.callable
-def list_uploaded_datasets():
-  """
-    Return a list of upload summaries (one per DB row that looks like an upload).
-    Each returned item is: {label, row_id, nrows, ncols, uploaded_at}
-    """
-  try:
-    # Change this name if your uploads table is different
-    table_name = "approach1_data"   # <- use the table that contains the rows you printed
-    if not hasattr(app_tables, table_name):
-      avail = [n for n in dir(app_tables) if not n.startswith("_")]
-      return {"status": "error", "message": f"Table '{table_name}' not found. Available tables: {avail}"}
+    tb = traceback.format_exc()
+    return {"ok": False, "error": str(e), "traceback": tb}
 
-    table = getattr(app_tables, table_name)
-
-    uploads = []
-    for r in table.search():
-      try:
-        row_id = r.get_id()
-      except Exception:
-        row_id = None
-
-        # Use safe .get with default None to avoid the 'get' quirk on missing fields
-      name = r.get("name") if "name" in r else (r.get("processed_name") if "processed_name" in r else None)
-      nrows = r.get("nrows") if "nrows" in r else None
-      ncols = r.get("ncols") if "ncols" in r else None
-      uploaded_at = r.get("uploaded_at") if "uploaded_at" in r else None
-
-      label = name or f"Upload {row_id}"
-      # Append summary
-      uploads.append({
-        "label": label,
-        "row_id": row_id,
-        "nrows": nrows,
-        "ncols": ncols,
-        "uploaded_at": uploaded_at
-      })
-
-      # sort by uploaded_at if present (newest first)
-    uploads.sort(key=lambda x: x.get("uploaded_at") or datetime.min, reverse=True)
-
-    return {"status": "ok", "uploads": uploads}
-
-  except Exception as e:
-    traceback.print_exc()
-    return {"status": "error", "message": f"{type(e).__name__}: {e}"}
-
-    def load_upload_records(row_id, max_rows=200):
-      """
-    Given an upload-row id (from list_uploaded_datasets), parse its data_json and
-    return up to max_rows records as a list of dicts for the client to display.
-    """
-    try:
-      # same table used earlier
-      table_name = "approach1_data"   # change if your upload row is in another table
-      table = getattr(app_tables, table_name)
-      row = table.get_by_id(row_id)
-      if row is None:
-        return {"status": "error", "message": "Row not found"}
-
-      data_json = row.get("data_json")
-      if not data_json:
-        return {"status": "error", "message": "No data_json found in this row"}
-
-        # Parse pandas orient='split' JSON
-      try:
-        df = pd.read_json(data_json, orient="split")
-      except Exception:
-        # fallback: maybe it's a JSON string containing the structure
-        try:
-          obj = json.loads(data_json)
-          # try DataFrame from obj (if obj has "data" and "columns")
-          if isinstance(obj, dict) and "data" in obj and "columns" in obj:
-            df = pd.DataFrame(obj["data"], columns=obj["columns"])
-          else:
-            # last-resort: try constructing DataFrame directly
-            df = pd.DataFrame(obj)
-        except Exception as e2:
-          return {"status": "error", "message": f"Failed to parse data_json: {e2}"}
-
-        # Limit rows for preview if requested
-      if max_rows is not None:
-        df = df.iloc[:int(max_rows)]
-
-      records = df.to_dict(orient="records")
-      columns = df.columns.tolist()
-      return {"status": "ok", "columns": columns, "records": records, "nrows": df.shape[0], "ncols": df.shape[1]}
-
-    except Exception as e:
-      traceback.print_exc()
-      return {"status": "error", "message": f"{type(e).__name__}: {e}"}
-#Changes made in Dec 4 by ShiaoXu Ended
-
-@anvil.server.callable
-def store_df_in_session(result):
-  # anvil.server.session is a per-user dict stored on server runtime
-  anvil.server.session['df_data'] = result
-  return True
-
-@anvil.server.callable
-def get_df_from_session():
-  return anvil.server.session.get('df_data')
-
-  

@@ -35,27 +35,21 @@ components:
     - {data_key: column_2, id: VJQQOR, title: Column 2}
     - {data_key: column_3, id: OJLQEN, title: Column 3}
   type: DataGrid
-- components:
-  - name: repeating_panel_2
-    properties: {item_template: Approach1.RowTemplate4}
-    type: RepeatingPanel
-  event_bindings: {show: data_grid_2_show}
-  layout_properties: {grid_position: 'GRZWHW,NDVDRI'}
-  name: data_grid_2
+- layout_properties: {grid_position: 'MUWRZG,EHBRSK'}
+  name: file_loader_2
+  properties: {}
+  type: FileLoader
+- event_bindings: {click: independency_check_click}
+  layout_properties: {grid_position: 'ZQDUVP,WLEWOK'}
+  name: independency_check
+  properties: {text: Start Checking Independence}
+  type: Button
+- layout_properties: {grid_position: 'SWPQLH,ZHBHPK'}
+  name: independence
   properties:
-    columns:
-    - {data_key: column_1, id: JKSDUP, title: Column 1}
-    - {data_key: column_2, id: VJQQOR, title: Column 2}
-    - {data_key: column_3, id: OJLQEN, title: Column 3}
-  type: DataGrid
-- layout_properties: {grid_position: 'PSOGDP,YLUERF'}
-  name: PLS_output
-  properties: {}
-  type: Image
-- layout_properties: {grid_position: 'PSOGDP,CYIUVW'}
-  name: ROC_AUC_output
-  properties: {}
-  type: Image
+    text: |
+      Independency analysis here
+  type: Label
 container:
   event_bindings: {show: form_show}
   type: ColumnPanel

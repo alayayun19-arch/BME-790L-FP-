@@ -1,0 +1,35 @@
+components:
+- layout_properties: {grid_position: 'FCGLXX,HZIJJQ'}
+  name: approach1_label_1
+  properties:
+    foreground: theme:Primary
+    role: [title, headline]
+    text: 'Approach 1: Clinical data analysis'
+  type: Label
+- layout_properties: {grid_position: 'EMZHQE,MPRIDK'}
+  name: file_loader_3
+  properties: {text: Upload Filled_OHT_data.csv}
+  type: FileLoader
+- event_bindings: {click: trigger_click}
+  layout_properties: {grid_position: 'VNVRSL,DJAYZE'}
+  name: trigger
+  properties: {text: start analysis}
+  type: Button
+- layout_properties: {grid_position: 'DDVFMO,XBBRYV'}
+  name: ReportLL_output
+  properties: {}
+  type: Image
+- layout_properties: {grid_position: 'DDVFMO,GNIXXE'}
+  name: Confusion_Mat_output
+  properties: {}
+  type: Image
+- layout_properties: {grid_position: 'UACTZM,QKZKBS'}
+  name: PLS_output
+  properties: {text: 'PLSReg Output shown here:'}
+  type: Label
+- layout_properties: {grid_position: 'LBRYKS,AYWJGJ'}
+  name: Linear_output
+  properties: {text: LinearReg_output shown here}
+  type: Label
+container: {type: ColumnPanel}
+is_package: true
