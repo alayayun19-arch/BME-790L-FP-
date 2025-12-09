@@ -43,16 +43,16 @@ components:
     name: content_panel
     properties: {col_widths: '{}'}
     type: ColumnPanel
+  - data_bindings: []
+    layout_properties: {grid_position: 'PPKIQM,LYGLXK'}
+    name: label_2
+    properties:
+      foreground: theme:Primary
+      icon: fa:angle-double-right
+      role: [title, headline]
+      text: 'Approach 2: MRI Data'
+    type: Label
   - components:
-    - data_bindings: []
-      layout_properties: {}
-      name: label_2
-      properties:
-        foreground: theme:Primary
-        icon: fa:angle-double-right
-        role: [title, headline]
-        text: 'Approach 2: MRI Data'
-      type: Label
     - event_bindings: {click: approach2_part1_click}
       layout_properties: {}
       name: approach2_part1
