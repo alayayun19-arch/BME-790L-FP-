@@ -36,6 +36,15 @@ components:
   name: label_4
   properties: {bold: true, font_size: 18, text: 'Demographic characteristics of the non-diabetic and diabetic groups:'}
   type: Label
+- layout_properties: {grid_position: 'RSIDWH,VDZOVT'}
+  name: label_plot_title
+  properties:
+    align: center
+    bold: true
+    text: |+
+      DM vs Non-DM Comparison (Selected Metrics)
+
+  type: Label
 - components:
   - name: repeating_panel_demographics
     properties: {item_template: Approach21.RowTemplate5}
@@ -50,14 +59,14 @@ components:
     - {data_key: p_value, id: WMYIUM, title: p_value}
     rows_per_page: 30
   type: DataGrid
+- layout_properties: {grid_position: 'KRZVSZ,QNOPMF'}
+  name: demographic_plot
+  properties: {height: 292.49993896484375}
+  type: Image
 - layout_properties: {grid_position: 'KOXEJY,PZWNGR'}
   name: label_gm_title
   properties: {align: center, bold: true, font_size: 18, text: GM analysis}
   type: Label
-- layout_properties: {grid_position: 'IKTPBE,TUAZRO'}
-  name: image_gm
-  properties: {height: 292.49993896484375}
-  type: Image
 - components:
   - name: repeating_panel_gm
     properties: {item_template: Approach21.RowTemplate5}
@@ -139,6 +148,6 @@ components:
     rows_per_page: 30
   type: DataGrid
 container:
-  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"IJNDNW":35,"EGFJKA":25,"TUAZRO":60}', visible: true}
+  properties: {background: '', col_widths: '{"TNWUBS":45,"KBQAII":15,"UMVQXI":60,"IJNDNW":35,"EGFJKA":25}', visible: true}
   type: ColumnPanel
 is_package: true

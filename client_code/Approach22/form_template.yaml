@@ -28,32 +28,49 @@ components:
     name: label_2_copy
     properties: {bold: true, font_size: 16, role: headline, text: Please upload the clinial data}
     type: Label
-  - event_bindings: {change: file_loader_1_copy_change}
+  - event_bindings: {change: file_loader_change}
     layout_properties: {grid_position: 'IAGVQL,AXIMCK'}
-    name: file_loader_1_copy
+    name: file_loader
     properties: {background: 'theme:Primary Container', text: Upload your data here}
     type: FileLoader
-  - layout_properties: {grid_position: 'IAGVQL,GZQSLB'}
-    name: button_1
+  - event_bindings: {click: button_1_click}
+    layout_properties: {grid_position: 'IAGVQL,GZQSLB'}
+    name: analysis
     properties: {background: 'theme:Primary Container', icon: 'fa:bar-chart', text: Start Analysis}
     type: Button
-  - layout_properties: {grid_position: 'WXJKCW,AMQJOX'}
-    name: label_2
+  - layout_properties: {grid_position: 'OWXTKN,QMMWQP'}
+    name: label_2_copy_2
     properties: {align: center, bold: true, text: HVLT Total Score}
     type: Label
   - components:
-    - name: repeating_panel_1_copy
+    - name: hvlt_repeating_panel
       properties: {item_template: Approach21.RowTemplate5}
       type: RepeatingPanel
-    layout_properties: {grid_position: 'UFTSSX,GZSCVQ'}
-    name: Demographic_characteristics
+    - name: label_2_copy_2_copy_copy
+      properties:
+        align: center
+        bold: true
+        text: |
+          VF: animals (T score)
+      type: Label
+    - components:
+      - name: vf_repeating_panel
+        properties: {item_template: Approach21.RowTemplate5}
+        type: RepeatingPanel
+      name: Demographic_characteristics_copy_copy
+      properties:
+        columns:
+        - {data_key: roi, expand: false, id: JKSDUP, title: Brian Region}
+        - {data_key: p, id: VJQQOR, title: p}
+        - {data_key: r2_aj, expand: false, id: OJLQEN, title: r2_aj, width: 200}
+      type: DataGrid
+    layout_properties: {grid_position: 'ATVPTE,VSNVDU'}
+    name: Demographic_characteristics_copy
     properties:
       columns:
-      - {data_key: column_1, expand: false, id: JKSDUP, title: Brian Region, width: 190.99996948242188}
-      - {data_key: column_2, id: VJQQOR, title: whole brain FA}
-      - {data_key: column_3, expand: false, id: OJLQEN, title: whole brain L1, width: 200}
-      - {data_key: column_1, id: RRKBSO, title: whole brain MD}
-      - {data_key: column_1, id: NJFKCS, title: whole brain RD}
+      - {data_key: roi, expand: false, id: JKSDUP, title: Brian Region}
+      - {data_key: p, id: VJQQOR, title: p}
+      - {data_key: r2_aj, expand: false, id: OJLQEN, title: r2_aj, width: 200}
     type: DataGrid
   layout_properties: {slot: default}
   name: content_panel
