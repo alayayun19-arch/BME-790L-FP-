@@ -18,8 +18,7 @@ components:
   name: label_2
   properties: {bold: true, font_size: 18, role: headline, text: Please upload the clinial data}
   type: Label
-- data_bindings: []
-  event_bindings: {change: file_loader_clinical_change}
+- event_bindings: {change: file_loader_clinical_change}
   layout_properties: {grid_position: 'ZJICDT,IJNDNW'}
   name: file_loader_clinical
   properties: {background: 'theme:Primary Container', bold: true, file_types: .csv, multiple: false, text: Upload your data here}

@@ -25,11 +25,6 @@ components:
         role: [title]
         text: 'Approach 1: Clinical Data'
       type: Label
-    - event_bindings: {change: file_loader_app1_change}
-      layout_properties: {grid_position: 'OJQNEU,VISUSE'}
-      name: file_loader_app1
-      properties: {background: 'theme:Primary Container', text: 'Upload .csv file here '}
-      type: FileLoader
     - event_bindings: {click: button_app1_click}
       layout_properties: {grid_position: 'OJQNEU,LIKEOB'}
       name: button_app1
@@ -43,8 +38,7 @@ components:
     name: content_panel
     properties: {col_widths: '{}'}
     type: ColumnPanel
-  - data_bindings: []
-    layout_properties: {grid_position: 'PPKIQM,LYGLXK'}
+  - layout_properties: {grid_position: 'PPKIQM,LYGLXK'}
     name: label_2
     properties:
       foreground: theme:Primary

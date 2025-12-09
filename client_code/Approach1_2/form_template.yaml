@@ -1,0 +1,14 @@
+components:
+- layout_properties: {grid_position: 'FCGLXX,HZIJJQ'}
+  name: approach1_label_1
+  properties:
+    foreground: theme:Primary
+    role: [title, headline]
+    text: 'Approach 1: Clinical data analysis'
+  type: Label
+- layout_properties: {grid_position: 'EMZHQE,MPRIDK'}
+  name: file_loader_3
+  properties: {}
+  type: FileLoader
+container: {type: ColumnPanel}
+is_package: true
